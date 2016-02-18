@@ -1,6 +1,7 @@
->source("http://bioconductor.org/biocLite.R")
+> source("http://bioconductor.org/biocLite.R")
 Bioconductor version 3.2 (BiocInstaller 1.20.1), ?biocLite for help
-> biocLite("PANR")                                                              BioC_mirror: https://bioconductor.org
+> biocLite("PANR")
+BioC_mirror: https://bioconductor.org
 Using Bioconductor 3.2 (BiocInstaller 1.20.1), R 3.2.2 (2015-08-14).
 Installing package(s) ‘PANR’
 trying URL 'https://bioconductor.org/packages/3.2/bioc/src/contrib/PANR_1.16.0.tar.gz'
@@ -21,7 +22,7 @@ downloaded 2.0 MB
 * DONE (PANR)
 
 The downloaded source packages are in
-        ‘/tmp/RtmpFczbAB/downloaded_packages’
+        ‘/tmp/RtmpqqneSy/downloaded_packages’
 Updating HTML index of packages in '.Library'
 Making 'packages.html' ... done
 Old packages: 'BiocCheck', 'Cairo', 'phyloseq', 'shiny', 'tidyr'
@@ -139,7 +140,7 @@ ERROR: lazy loading failed for package ‘tidyr’
 * restoring previous ‘/tgac/software/testing/R/3.2.2/x86_64/lib64/R/library/tidyr’
 
 The downloaded source packages are in
-        ‘/tmp/RtmpFczbAB/downloaded_packages’
+        ‘/tmp/RtmpqqneSy/downloaded_packages’
 Updating HTML index of packages in '.Library'
 Making 'packages.html' ... done
 Warning messages:
