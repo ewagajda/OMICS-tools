@@ -3,10 +3,10 @@ i) Knet successfully identifies clustering on simulated networks
 # generate the simulated network
 > library(SANTA)
 Loading required package: igraph
-Attaching package: ‘igraph’
-The following objects are masked from ‘package:stats’:
+Attaching package: â€˜igraphâ€™
+The following objects are masked from â€˜package:statsâ€™:
     decompose, spectrum
-The following object is masked from ‘package:base’:
+The following object is masked from â€˜package:baseâ€™:
     union
 
 > require(igraph)
@@ -126,13 +126,13 @@ Bioconductor version 3.2 (BiocInstaller 1.20.1), ?biocLite for help
 > biocLite("org.Sc.sgd.db")
 BioC_mirror: https://bioconductor.org
 Using Bioconductor 3.2 (BiocInstaller 1.20.1), R 3.2.2 (2015-08-14).
-Installing package(s) ‘org.Sc.sgd.db’
+Installing package(s) â€˜org.Sc.sgd.dbâ€™
 trying URL 'https://bioconductor.org/packages/3.2/data/annotation/src/contrib/org.Sc.sgd.db_3.2.3.tar.gz'
 Content type 'application/x-gzip' length 19355049 bytes (18.5 MB)
 ==================================================
 downloaded 18.5 MB
 
-* installing *source* package ‘org.Sc.sgd.db’ ...
+* installing *source* package â€˜org.Sc.sgd.dbâ€™ ...
 ** R
 ** inst
 ** preparing package for lazy loading
@@ -143,7 +143,7 @@ downloaded 18.5 MB
 * DONE (org.Sc.sgd.db)
 
 The downloaded source packages are in
-        ‘/tmp/RtmptCI36Y/downloaded_packages’
+        â€˜/tmp/RtmptCI36Y/downloaded_packagesâ€™
 Updating HTML index of packages in '.Library'
 Making 'packages.html' ... done
 Old packages: 'BiocCheck', 'Cairo', 'phyloseq', 'shiny', 'tidyr'
@@ -156,18 +156,18 @@ Loading required package: stats4
 Loading required package: BiocGenerics
 Loading required package: parallel
 
-Attaching package: ‘BiocGenerics’
+Attaching package: â€˜BiocGenericsâ€™
 
-The following objects are masked from ‘package:parallel’:
+The following objects are masked from â€˜package:parallelâ€™:
     clusterApply, clusterApplyLB, clusterCall, clusterEvalQ,
     clusterExport, clusterMap, parApply, parCapply, parLapply,
     parLapplyLB, parRapply, parSapply, parSapplyLB
 
-The following objects are masked from ‘package:igraph’:
+The following objects are masked from â€˜package:igraphâ€™:
     normalize, union
-The following objects are masked from ‘package:stats’:
+The following objects are masked from â€˜package:statsâ€™:
     IQR, mad, xtabs
-The following objects are masked from ‘package:base’:
+The following objects are masked from â€˜package:baseâ€™:
     anyDuplicated, append, as.data.frame, as.vector, cbind, colnames,
     do.call, duplicated, eval, evalq, Filter, Find, get, grep, grepl,
     intersect, is.unsorted, lapply, lengths, Map, mapply, match, mget,
@@ -185,19 +185,13 @@ Welcome to Bioconductor
 Loading required package: IRanges
 Loading required package: S4Vectors
 
-Attaching package: ‘S4Vectors’
+Attaching package: â€˜S4Vectorsâ€™
 
-The following object is masked from ‘package:igraph’:
-
+The following object is masked from â€˜package:igraphâ€™:
     compare
-
-
-Attaching package: ‘IRanges’
-
-The following object is masked from ‘package:igraph’:
-
+Attaching package: â€˜IRangesâ€™
+The following object is masked from â€˜package:igraphâ€™:
     simplify
-
 Loading required package: DBI
 
 > xx <- as.list(org.Sc.sgdGO2ALLORFS)
@@ -216,7 +210,6 @@ This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 #above message appeared 30 times here
-
 
 > results <- list()
 > for (name in network.names) {
@@ -308,7 +301,6 @@ This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 
-
 > results <- sapply(networks, function(g) Knet(g, nperm=1000, 
      dist.method="shortest.paths", vertex.attr="rdds", 
      edge.attr="distance"), simplify=F)
@@ -317,13 +309,11 @@ This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 #above message appeared 15 times here
-
 computing graph distance matrix... 
 This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 # above message appeared 18 times here
-
 done
 computing graph distance bins... done
 computing the clustering of the 'rdds' weights using 1000 permutations...  done
@@ -331,25 +321,19 @@ This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 # above message appeared 15 times here
-
 computing graph distance matrix... 
 This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 # above message appeared 18 times here
-
-
 done
 computing graph distance bins... done
 computing the clustering of the 'rdds' weights using 1000 permutations...  done
 
-
  > p.values <- sapply(results, function(res) res$pval)
  > p.values
-
      treated     untreated
 7.939843e-28 5.469717e-18
-
 
 > plot(results$treated)
 Error in (function (file = ifelse(onefile, "Rplots.pdf", "Rplot%03d.pdf"),  :
@@ -359,8 +343,8 @@ Error in (function (file = ifelse(onefile, "Rplots.pdf", "Rplot%03d.pdf"),  :
   cannot open file 'Rplots.pdf'
 
 
-v) Using Knet to investigate the functional rewiring of the yeast interaction network in response to UV damage
 
+v) Using Knet to investigate the functional rewiring of the yeast interaction network in response to UV damage
 
 # laod igraph object
 > data(g.srivas.high)
@@ -397,7 +381,6 @@ This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 
-
 > networks <- sapply(network.names, function(name)
 +     set.vertex.attribute(networks[[name]], "dsbr",
 +     value=associations[[name]]), simplify=F)
@@ -420,7 +403,6 @@ This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 
-
 > p.values <- sapply(networks, function(g)
        Knet(g, nperm=1000, dist.method="shortest.paths",
        vertex.attr="dsbr", edge.attr="distance")$pval)
@@ -428,13 +410,11 @@ This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 #above message appeared 15 times here
-
 computing graph distance matrix...
 This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 #above message appeared 18 times here
-
 done
 computing graph distance bins... done
 computing the clustering of the 'dsbr' weights using 1000 permutations...  done
@@ -442,18 +422,15 @@ This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 #above message appeared 15 times here
-
 computing graph distance matrix... This graph was created by an old(er) igraph version.
   Call upgrade_graph() on it to use with the current igraph version
   For now we convert it on the fly...
 #above message appeared 18 times here
-
 done
 computing graph distance bins... done
 computing the clustering of the 'dsbr' weights using 1000 permutations...  done
 
 > p.values
-
      treated    untreated
 3.787088e-06 5.713970e-01
 
@@ -461,8 +438,8 @@ computing the clustering of the 'dsbr' weights using 1000 permutations...  done
 rm(xx, networks, g.srivas.high, g.srivas.untreated)
 
 
-vi) Using Knet to identify the network most informative about cancer cell lines
 
+vi) Using Knet to identify the network most informative about cancer cell lines
 
 # import and convert RNAi data
 > data(rnai.cheung)
@@ -481,7 +458,6 @@ vi) Using Knet to identify the network most informative about cancer cell lines
 > g.humannet <- set.edge.attribute(g.humannet, "distance",
 +     value=edgelist.humannet$distance)
 > networks <- list(intact=g.intact, humannet=g.humannet)
-
 
 > network.names <- names(networks)
 > network.genes <- sapply(networks, get.vertex.attribute,
@@ -542,13 +518,13 @@ vii) Comparison of Knode and BioNet using simulated data
 > library(BioNet)
 Loading required package: graph
 
-Attaching package: ‘graph’
+Attaching package: â€˜graphâ€™
 
-The following objects are masked from ‘package:igraph’:
+The following objects are masked from â€˜package:igraphâ€™:
     degree, edges, intersection
 Loading required package: RBGL
-Attaching package: ‘RBGL’
-The following objects are masked from ‘package:igraph’:
+Attaching package: â€˜RBGLâ€™
+The following objects are masked from â€˜package:igraphâ€™:
     bfs, dfs, transitivity
 
 # # required parameters
@@ -567,7 +543,7 @@ HTTPS CRAN mirror
  1: 0-Cloud [https]                2: Austria [https]
  3: Chile [https]                  4: China (Beijing 4) [https]
  5: Colombia (Cali) [https]        6: France (Lyon 2) [https]
- 7: France (Paris 2) [https]       8: Germany (Münster) [https]
+ 7: France (Paris 2) [https]       8: Germany (MÃ¼nster) [https]
  9: Iceland [https]               10: Italy (Padua) [https]
 11: Japan (Tokyo) [https]         12: Mexico (Mexico City) [https]
 13: New Zealand [https]           14: Russia (Moscow) [https]
@@ -598,8 +574,8 @@ HTTP CRAN mirror
 27: France (Lyon 1)              28: France (Lyon 2)
 29: France (Marseille)           30: France (Montpellier)
 31: France (Paris 1)             32: France (Paris 2)
-33: Germany (Berlin)             34: Germany (Göttingen)
-35: Germany (Münster)            36: Greece
+33: Germany (Berlin)             34: Germany (GÃ¶ttingen)
+35: Germany (MÃ¼nster)            36: Greece
 37: Hungary                      38: Iceland
 39: India                        40: Indonesia (Jakarta)
 41: Iran                         42: Ireland
@@ -634,7 +610,7 @@ HTTP CRAN mirror
 
 
 Selection: 76
-also installing the dependency ‘expm’
+also installing the dependency â€˜expmâ€™
 
 trying URL 'http://www.stats.bris.ac.uk/R/src/contrib/expm_0.999-0.tar.gz'
 Content type 'application/x-gzip' length 135405 bytes (132 KB)
@@ -646,32 +622,33 @@ Content type 'application/x-gzip' length 807556 bytes (788 KB)
 ==================================================
 downloaded 788 KB
 
-* installing *source* package ‘expm’ ...
-** package ‘expm’ successfully unpacked and MD5 sums checked
+* installing *source* package â€˜expmâ€™ ...
+** package â€˜expmâ€™ successfully unpacked and MD5 sums checked
 ** libs
 gcc -std=gnu99 -I/tgac/software/testing/R/3.2.2/x86_64/lib64/R/include -DNDEBUG  -I/tgac/software/testing/libraries/libcurl/7.32.0/x86_64/include -I/tgac/software/testing/bin/core/../..//hpccore/5/x86_64/include     -fpic  -g -O2  -c R_dgebal.c -o R_dgebal.o
-R_dgebal.c: In function ‘ebal_type’:
-R_dgebal.c:11: error: ‘LC_MESSAGES’ undeclared (first use in this function)
+R_dgebal.c: In function â€˜ebal_typeâ€™:
+R_dgebal.c:11: error: â€˜LC_MESSAGESâ€™ undeclared (first use in this function)
 R_dgebal.c:11: error: (Each undeclared identifier is reported only once
 R_dgebal.c:11: error: for each function it appears in.)
-R_dgebal.c: In function ‘R_dgebal’:
-R_dgebal.c:28: error: ‘LC_MESSAGES’ undeclared (first use in this function)
+R_dgebal.c: In function â€˜R_dgebalâ€™:
+R_dgebal.c:28: error: â€˜LC_MESSAGESâ€™ undeclared (first use in this function)
 make: *** [R_dgebal.o] Error 1
-ERROR: compilation failed for package ‘expm’
-* removing ‘/tgac/software/testing/R/3.2.2/x86_64/lib64/R/library/expm’
-ERROR: dependency ‘expm’ is not available for package ‘msm’
-* removing ‘/tgac/software/testing/R/3.2.2/x86_64/lib64/R/library/msm’
+ERROR: compilation failed for package â€˜expmâ€™
+* removing â€˜/tgac/software/testing/R/3.2.2/x86_64/lib64/R/library/expmâ€™
+ERROR: dependency â€˜expmâ€™ is not available for package â€˜msmâ€™
+* removing â€˜/tgac/software/testing/R/3.2.2/x86_64/lib64/R/library/msmâ€™
 
 The downloaded source packages are in
-        ‘/tmp/RtmptCI36Y/downloaded_packages’
+        â€˜/tmp/RtmptCI36Y/downloaded_packagesâ€™
 Updating HTML index of packages in '.Library'
 Making 'packages.html' ... done
 Warning messages:
 1: In install.packages("msm") :
-  installation of package ‘expm’ had non-zero exit status
+  installation of package â€˜expmâ€™ had non-zero exit status
 2: In install.packages("msm") :
-  installation of package ‘msm’ had non-zero exit status
+  installation of package â€˜msmâ€™ had non-zero exit status
 #NOT DONE BECAUSE PACKAGE "MSM" COULDN'T INSTALL!!!
+
 
 
 viii) Comparison of Knode and BioNet using real data
