@@ -1,0 +1,258 @@
+ > library(PANR)
+Loading required package: igraph
+
+Attaching package: ‘igraph’
+The following objects are masked from ‘package:stats’:
+    decompose, spectrum
+The following object is masked from ‘package:base’:
+    union
+
+> data(Bakal2007)
+> dim(Bakal2007)
+[1] 273   7
+
+> bm1<-new("BetaMixture", pheno=Bakal2007, metric="cosine", model="global", order=1)
+--Computing association scores ...
+> bm1
+A three-component beta-mixture model:
+
+-input
+phenotype partition     model    metric
+  273 x 7      None    global    cosine
+
+> bm1<-fitNULL(bm1, nPerm=10, thetaNULL=c(alphaNULL=4, betaNULL=4), sumMethod="m      edian", permMethod="all", verbose=TRUE)
+-NULL fitting
+--Permutation and fitting the central components
+  |======================================================================| 100%
+-Permutation and fitting finished
+
+
+>bm1<-fitBM(bm1, para=list(zInit=NULL, thetaInit=c(alphaNeg=2,betaNeg=4, alphaNULL=bm1@result$fitNULL$thetaNULL[["alphaNULL"]],betaNULL=bm1@result$fitNULL$thetaNULL[["betaNULL"]],alphaPos=4, betaPos=2), gamma=NULL), ctrl=list(fitNULL=FALSE, tol=1e-1), verbose=TRUE, gradtol=1e-3)
+
+-Beta-Mixture Modelling
+(ML estimation for global Beta Mixture Model based on EM algorithm)
+--iter  98       NLL  16710.65
+-Beta-Mixture Modelling fitting finished!
+
+> view(bm1, "fitNULL")
+> view(bm1, "fitBM")
+> summarize(bm1, what="ALL")
+
+-input
+phenotype partition     model    metric
+  273 x 7      None    global    cosine
+
+-NULL fitting
+     No. of perm       summarize method       permutation method
+              10                 median                    all
+shape1 (start->fitted) shape2 (start->fitted)
+              4->2.999               4->2.956
+
+-Beta-Mixture model fitting
+--parameters:
+         z (init)         shapes(- init)         shapes(x init)
+             None     shape1=2, shape2=4 shape1=3, shape2=2.999
+        shapes(+ init)                  gamma
+    shape1=4, shape2=2                   None
+--control arguments:
+     fitNULL    tolerance maxIteration
+       FALSE          0.1          Inf
+--results:
+           shapes(- fitted)            shapes(x fitted)
+shape1=3.037, shape2=11.454  shape1=2.999, shape2=2.956
+           shapes(+ fitted)                 pi (fitted)
+ shape1=8.420, shape2=1.652           0.260,0.490,0.250
+                        NLL
+                  16710.650
+
+
+> pan<-new("PAN", bm1=bm1)
+> pan<-infer(pan, para=list(type="SNR", log=TRUE, sign=TRUE, cutoff=log(5)), filter=FALSE, verbose=TRUE)
+
+
+>data(Bakal2007Cluster)
+>pan<-buildPAN(pan, engine="RedeR", para=list(nodeColor=nodeColor, hideNeg=TRUE))
+
+--use default args:  nodeSumCols, nodeSumMethod
+-building RedeR graph ...
+-finished building RedeR graph ...
+
+> library(RedeR)
+***This is RedeR 1.18.0! For a quick start, please type 'vignette('RedeR')'.
+   Supporting information is available at Genome Biology 13:R29, 2012,
+   (doi:10.1186/gb-2012-13-4-r29).
+> viewPAN(pan, what="graph")
+................................................................................
+
+The Java interface is not responding to initialization!
+Please, check whether Java is already installed in your machine (JRE version>=6).
+For a general diagnosis, re-run the 'calld' function with 'checkcalls=TRUE', for example: > calld(rdp, checkcalls=TRUE)
+Please report any eventual error message to us <mauro.a.castro at gmail.com>
+
+> library(pvclust)
+> library(snow)
+> options(cluster=makeCluster(4, "SOCK"))
+> pan<-pvclustModule(pan, nboot=1000, metric="cosine", hclustMethod="average", filter=TRUE, verbose=TRUE, r=c(5:12/7))
+-Searching enriched functional gene modules using clustering with bootstrap resampling
+Multiscale bootstrap... Done.
+Warning message:
+In pvclust::parPvclust(getOption("cluster"), t(fPheno), method.hclust = hclustMethod,  :
+  "parPvclust" has been integrated into pvclust (with "parallel" option).
+It is available for back compatibility but will be unavailable in the future.
+
+> inds<-sigModules(pan,pValCutoff=0.01, minSize=3,maxSize=100, sortby="pval", decreasing=FALSE)
+> viewPAN(pan,what="pvclustModule", moduleID=inds)
+................................................................................
+
+The Java interface is not responding to initialization!
+Please, check whether Java is already installed in your machine (JRE version>=6).
+For a general diagnosis, re-run the 'calld' function with 'checkcalls=TRUE', for example:
+> calld(rdp, checkcalls=TRUE)
+Please report any eventual error message to us <mauro.a.castro at gmail.com>
+There were 50 or more warnings (use warnings() to see the first 50)
+> warnings()
+Warning messages:
+1: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+2: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+3: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+4: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+5: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+6: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+7: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+8: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+9: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+10: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+11: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+12: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+13: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+14: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+15: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+16: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+17: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+18: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+19: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+20: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+21: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+22: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+23: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+24: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+25: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+26: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+27: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+28: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+29: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+30: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+31: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+32: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+33: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+34: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+35: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+36: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+37: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+38: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+39: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+40: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+41: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+42: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+43: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+44: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+45: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+46: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+47: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+48: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+49: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+50: In .Call("R_igraph_subgraph", graph, as.igraph.vs(graph,  ... :
+  At structural_properties.c:1945 :igraph_subgraph is deprecated from igraph 0.6, use igraph_induced_subgraph instea
+
+> viewNestedModules(pan,pValCutoff=0.05,minSize=3,maxSize=100)
+................................................................................
+
+The Java interface is not responding to initialization!
+Please, check whether Java is already installed in your machine (JRE version>=6).
+For a general diagnosis, re-run the 'calld' function with 'checkcalls=TRUE', for example:
+> calld(rdp, checkcalls=TRUE)
+Please report any eventual error message to us <mauro.a.castro at gmail.com>
+
+
+> summarize(pan, what="graph")
+-graph
+edgeWeightType        log         signed    edgeWeightCutoff
+             SNR      TRUE          TRUE     1.6094379124341
+           nodes            edges
+             273             4417
+
+
+
+> sessionInfo()
+R version 3.2.2 (2015-08-14)
+Platform: x86_64-pc-linux-gnu (64-bit)
+Running under: CentOS release 6.7 (Final)
+
+locale:
+ [1] LC_CTYPE=en_US.UTF-8       LC_NUMERIC=C
+ [3] LC_TIME=en_US.UTF-8        LC_COLLATE=en_US.UTF-8
+ [5] LC_MONETARY=en_US.UTF-8    LC_MESSAGES=en_US.UTF-8
+ [7] LC_PAPER=en_US.UTF-8       LC_NAME=C
+ [9] LC_ADDRESS=C               LC_TELEPHONE=C
+[11] LC_MEASUREMENT=en_US.UTF-8 LC_IDENTIFICATION=C
+
+attached base packages:
+[1] stats     graphics  grDevices utils     datasets  methods   base
+
+other attached packages:
+[1] snow_0.4-1    pvclust_2.0-0 RedeR_1.18.0  PANR_1.16.0   igraph_1.0.1
+
+loaded via a namespace (and not attached):
+[1] MASS_7.3-45    magrittr_1.5   parallel_3.2.2 tools_3.2.2    RCurl_1.95-4.7
+[6] bitops_1.0-6   XML_3.98-1.3
+
+
